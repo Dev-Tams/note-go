@@ -20,13 +20,12 @@ func main() {
 
 }
 
-func RegisterRoutes(r *gin.Engine){
+func RegisterRoutes(r *gin.Engine) {
 	r.GET("/hello", handlers.Hello)
 
 	r.GET("/users", handlers.GetUsers)
-	r.GET("/users/:id", handlers.GetUserByID)
+	r.GET("/users/:id", handlers.GetUserByID) 
 	r.POST("/users", handlers.CreateUser)
-	r.DELETE("/users", handlers.DeleteUser)
-
-
+	r.DELETE("/users/:id", handlers.DeleteUser)
 }
+
