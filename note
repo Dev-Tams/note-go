@@ -1,0 +1,22 @@
+A small backend app that lets you:
+
+Create notes
+
+View all notes
+
+View a single note
+
+Delete notes
+
+You’ll get to practice:
+
+Routing
+
+Working with structs
+
+Slices (in-memory storage, no DB yet)
+
+JSON encoding/decoding
+
+net/http package
+
