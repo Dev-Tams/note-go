@@ -1,15 +1,14 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"slices"
+	"strconv"
 
 	"github.com/dev-tams/note-go/models"
 	"github.com/gin-gonic/gin"
 )
-
 
 var users []models.User
 
@@ -22,33 +21,40 @@ func GetUsers(c *gin.Context) {
 }
 
 func GetUserByID(c *gin.Context) {
-	c.JSON(http.StatusFound, gin.H{
-		"message": "Get User By ID",
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid user ID",
+		})
+		return
+	}
+	for _, user := range users {
+		if int(user.ID) == id {
+			c.JSON(http.StatusOK, gin.H{
+				"data": user,
+			})
+			return
+		}
+	}
+	c.JSON(http.StatusNotFound, gin.H{
+		"error": "User not found",
 	})
 }
 
 func CreateUser(c *gin.Context) {
-	// Read the request body
 
-	fileBytes, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body",
-		})
-		return
-	}
-	// Create a User struct to store the unmarshaled data
 	var user models.User
-	// Unmarshal the JSON data into the User struct
 
-	err = json.Unmarshal(fileBytes, &user)
+	err := c.BindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid JSON format",
 		})
+		return
 	}
+	user.ID = uint(len(users) + 1)
 	users = append(users, user)
-	// Print the user data (or do something else with it)
 
 	fmt.Printf("User: %+v\n", user)
 
@@ -57,7 +63,24 @@ func CreateUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	c.JSON(http.StatusMovedPermanently, gin.H{
-		"message": "Delete User",
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+        return
+    }
+
+	for index, user := range users {
+		if int(user.ID) == id {
+
+			users = slices.Delete(users, index, index+1)
+
+			c.Status(http.StatusNoContent)
+			return
+		}
+	}
+
+	c.JSON(http.StatusNotFound, gin.H{
+		"error": "User not found",
 	})
 }
