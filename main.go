@@ -1,15 +1,22 @@
 package main
 
 import (
-	"github.com/dev-tams/note-go/handlers"
 	"log"
+
+	"github.com/dev-tams/note-go/db"
+	"github.com/dev-tams/note-go/handlers"
+	"github.com/joho/godotenv"
+
 	// "net/http"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	db.Init()
 	r := gin.Default()
-	
+
+	godotenv.Load()
+
 	RegisterRoutes(r)
 
 	log.Print("listening on Port 8000")
@@ -24,8 +31,7 @@ func RegisterRoutes(r *gin.Engine) {
 	r.GET("/hello", handlers.Hello)
 
 	r.GET("/users", handlers.GetUsers)
-	r.GET("/users/:id", handlers.GetUserByID) 
+	r.GET("/users/:id", handlers.GetUserByID)
 	r.POST("/users", handlers.CreateUser)
 	r.DELETE("/users/:id", handlers.DeleteUser)
 }
-
