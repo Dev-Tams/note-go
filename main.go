@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	godotenv.Load()
 	db.Init()
 	r := gin.Default()
 
