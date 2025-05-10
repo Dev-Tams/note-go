@@ -1,0 +1,28 @@
+GET  http://127.0.0.1:8000/users/13/notes
+Accept: application/json
+Content-Type: application/json
+
+{
+    
+}
+###
+
+
+GET  http://127.0.0.1:8000/users
+Accept: application/json
+Content-Type: application/json
+
+{
+
+}
+###
+
+POST http://127.0.0.1:8000/users
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "res",
+    "email": "res@mail.com"
+}
+###
