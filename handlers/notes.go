@@ -10,34 +10,30 @@ import (
 )
 
 func GetUserNotes(c *gin.Context) {
-
-
 	var user models.User
-	var notes models.Note
+	var notes []models.Note
 
-	//find user by id
 	idParam := c.Param("id")
-	id, _ := strconv.Atoi(idParam)
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
 
 	if err := db.DB.First(&user, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
-	//find user notes by user id
-	if err := db.DB.Find(&notes).Error; err != nil {
+	if err := db.DB.Where("user_id = ?", id).Find(&notes).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch notes"})
 		return
 	}
-
-	
-	//return user notes
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Notes from user",
 		"data":    notes,
 	})
-
 }
 
 func CreateUserNote(c *gin.Context) {

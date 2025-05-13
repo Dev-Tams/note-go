@@ -1,4 +1,4 @@
-GET  http://127.0.0.1:8000/users/13/notes
+GET  http://127.0.0.1:8000/users/1/notes
 Accept: application/json
 Content-Type: application/json
 
