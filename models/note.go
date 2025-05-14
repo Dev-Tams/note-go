@@ -9,7 +9,6 @@ type Note struct {
     Title     string    `json:"title"`
     Content   string    `json:"content"`
     UserID    uint      `json:"user_id"`
-    User      User      `gorm:"foreignKey:UserID" json:"user,omitempty"`
     CreatedAt time.Time `json:"created_at"`
     UpdatedAt time.Time `json:"updated_at"`
 }

@@ -37,10 +37,26 @@ func GetUserNotes(c *gin.Context) {
 }
 
 func CreateUserNote(c *gin.Context) {
-	//find user by id
+	var note models.Note
 
-	//create note for user
-	//return created note
+	if err := c.ShouldBindJSON(&note); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format", "details": err.Error()})
+		return
+	}
+
+	var user models.User
+	if err := db.DB.First(&user, note.UserID).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found", "details": err.Error()})
+		return
+	}
+
+	// Create the note
+	if err := db.DB.Create(&note).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create note", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, note)
 }
 
 func UpdateUserNote(c *gin.Context) {
