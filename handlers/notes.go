@@ -149,14 +149,46 @@ func UpdateUserNote(c *gin.Context) {
 // }
 
 func DeleteUserNote(c *gin.Context) {
-	log.Println("Handler hit!")
-	//find user by id
 
-	//find note by note id
+	var note models.Note
+	var user models.User
+
+	// Get user ID and note ID from URL parameters
+	userIdParam := c.Param("id")
+	noteIdParam := c.Param("noteId")
+
+	userID, err := strconv.Atoi(userIdParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid user id"})
+		return
+	}
+	noteID, err := strconv.Atoi(noteIdParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid note id"})
+		return
+	}
+	//find user by id, find note by note id
+	if err := db.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	if err := db.DB.Where("id = ? AND user_id = ?", noteID, userID).First(&note).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found for this user"})
+		return
+	}
+
 	//delete note for user
+
+	if err := db.DB.Delete(&note, noteID).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Note Not Deleted"})
+		return
+	}
 	//return deleted note
 	log.Println("Returning JSON response")
-	c.JSON(http.StatusOK, gin.H{"status": "hello world"})
+	c.Status(http.StatusNoContent)
 }
 func GetNotes(c *gin.Context) {
 	//find all notes
