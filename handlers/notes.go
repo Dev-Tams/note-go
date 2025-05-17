@@ -35,6 +35,44 @@ func GetUserNotes(c *gin.Context) {
 		"data":    notes,
 	})
 }
+func GetUserNoteById(c *gin.Context) {
+	var user models.User
+	var note models.Note
+
+	// Get user ID and note ID from URL
+	userIDParam := c.Param("id")
+	noteIDParam := c.Param("noteId")
+
+	
+	userID, err := strconv.Atoi(userIDParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	noteID, err := strconv.Atoi(noteIDParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note ID"})
+		return
+	}
+
+
+	if err := db.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+
+	if err := db.DB.Where("id = ? AND user_id = ?", noteID, userID).First(&note).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found for this user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": note,
+	})
+}
+
 
 func CreateUserNote(c *gin.Context) {
 	var note models.Note

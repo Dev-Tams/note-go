@@ -34,6 +34,7 @@ func RegisterRoutes(r *gin.Engine) {
 	r.DELETE("/users/:id", handlers.DeleteUser)
 
 	r.GET("/users/:id/notes", handlers.GetUserNotes)
+	r.GET("/users/:id/notes/:noteId", handlers.GetUserNoteById)
 	r.POST("/users/:id/notes", handlers.CreateUserNote)
 	r.PUT("/users/:id/notes/:noteId", handlers.UpdateUserNote)
 	r.DELETE("/users/:id/notes/:noteId", handlers.DeleteUserNote)
