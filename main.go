@@ -1,21 +1,20 @@
 package main
 
 import (
-	"log"
 	"github.com/dev-tams/note-go/db"
 	"github.com/dev-tams/note-go/handlers"
+	"log"
 
 	// "net/http"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	
+
 	db.Init()
 	r := gin.Default()
 	RegisterRoutes(r)
 
-	
 	log.Print("listening on Port 8000")
 	errr := r.Run(":8000")
 	if errr != nil {

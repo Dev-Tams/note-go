@@ -1,4 +1,4 @@
-GET  http://127.0.0.1:8000/users/1/notes
+GET  http://127.0.0.1:8000/users/11
 Accept: application/json
 Content-Type: application/json
 
@@ -26,3 +26,28 @@ Content-Type: application/json
     "email": "res@mail.com"
 }
 ###
+GET  http://127.0.0.1:8000/users/11/notes/3
+Accept: application/json
+Content-Type: application/json
+
+{
+    
+}
+###
+PUT  http://127.0.0.1:8000/users/11/notes/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "edited",
+  "content": "This is an edited note"
+}
+
+###
+DELETE  http://localhost:8000/users/11/notes/3
+Accept: application/json
+Content-Type: application/json
+
+{
+
+}
