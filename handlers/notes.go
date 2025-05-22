@@ -62,7 +62,7 @@ func GetUserNoteById(c *gin.Context) {
 	}
 
 	if err := db.DB.Where("id = ? AND user_id = ?", noteID, userID).First(&note).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found for this user"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found"})
 		return
 	}
 
@@ -121,7 +121,7 @@ func UpdateUserNote(c *gin.Context) {
 	}
 
 	if err := db.DB.Where("id = ? AND user_id = ?", noteID, userID).First(&note).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found for this user"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found"})
 		return
 	}
 
@@ -143,10 +143,6 @@ func UpdateUserNote(c *gin.Context) {
 	// Return updated note
 	c.JSON(http.StatusOK, gin.H{"message": "Note updated", "data": note})
 }
-
-// func UpdateUserNote(c *gin.Context) {
-//     c.JSON(200, gin.H{"message": "hit update user note"})
-// }
 
 func DeleteUserNote(c *gin.Context) {
 
@@ -176,7 +172,7 @@ func DeleteUserNote(c *gin.Context) {
 	}
 
 	if err := db.DB.Where("id = ? AND user_id = ?", noteID, userID).First(&note).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found for this user"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Note not found"})
 		return
 	}
 
@@ -191,6 +187,15 @@ func DeleteUserNote(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 func GetNotes(c *gin.Context) {
-	//find all notes
-	//return all notes
+	var notes []models.Note
+
+	if err := db.DB.Find(&notes).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "All notes from DB",
+		"data":    notes,
+	})
+
 }

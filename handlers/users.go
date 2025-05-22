@@ -45,13 +45,12 @@ func GetUserByID(c *gin.Context) {
 }
 func CreateUser(c *gin.Context) {
 	var user models.User
-	var existingUser models.User
 
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON format"})
 		return
 	}
-	if err := db.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
+	if err := db.DB.Where("email = ?", user.Email).First(&user).Error; err == nil {
 		c.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
 		return
 	}
